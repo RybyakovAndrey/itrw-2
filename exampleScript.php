@@ -23,9 +23,20 @@ echo 'Цена цифрового. экзмепляра книги "Чистый
 $physicalBook = new QuantityProduct($baseBook);
 echo 'Цена физического экзмепляра книги "Чистый код": ' . $physicalBook->calculatePrice() ." руб.\n";
 
+// Также с помощью декоратора мы можем "переконвертировать физическую книгу в цифровую"
+
+echo "\n";
+
+$convertedToDigitalBook = new DigitalProduct($physicalBook);
+echo 'Цена цифрового экземпляра (конвертировали из Quantity в Digital), книги "Чистый код": ';
+echo $convertedToDigitalBook->calculatePrice() . "\n";
+
 
 
 // Цена весового товара считается аналогичным образом
+
+echo "\n";
+
 $baseApples = new BaseProduct("Яблоки", 150);
 $apples = new WeightProduct($baseApples, 2.5);
 echo "Цена 2.5 кг яблок: " . $apples->calculatePrice() . " руб.\n";
