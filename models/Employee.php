@@ -1,5 +1,5 @@
 <?php
-
+// Пример наследника User, помимо пользователя может закрывать заказ
 class Employee extends User {
     private string $address;
     private string $INN;
@@ -13,8 +13,8 @@ class Employee extends User {
         $this->CardNumber = $cardNumber;
     }
 
-    public function closeOrder($order) {
-        $order->closed = true;
+    public function closeOrder(Order $order) {
+        $order->closeOrder();
     }
 
 }

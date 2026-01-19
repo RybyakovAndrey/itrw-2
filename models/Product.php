@@ -10,7 +10,7 @@ class Product
     private int $productId;
     private string $name;
     private float $price;
-    private $reviews;
+    private $reviews = [];
     public function __construct($productId, $name, $price) {
         $this->productId = $productId;
         $this->name = $name;
@@ -30,8 +30,12 @@ class Product
     public function getGoodReviews() {
         // Реализовать по статусу true у объекта review в массиве reviews
     }
-    public function addReview($user, $review) {
-        $review = new Review($user, $review);
+    public function addReview($user, $text) {
+        $review = new Review($user, $text);
         array_push($this->reviews, $review);
     }
 }
+
+
+
+
