@@ -2,16 +2,18 @@
 
 namespace App;
 
-class Comment
+class Post
 {
     private string $uuid;
-    private string $post_uuid;
     private string $author_uuid;
+    private string $title;
     private string $text;
-    public function __construct(string $uuid, string $post_uuid, string $author_uuid, string $text){
+    public function __construct(string $uuid, string $author_uuid, string $title, string $text)
+    {
         $this->uuid = $uuid;
-        $this->post_uuid = $post_uuid;
         $this->author_uuid = $author_uuid;
+        $this->title = $title;
         $this->text = $text;
     }
+
 }
