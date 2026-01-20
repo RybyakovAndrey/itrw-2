@@ -10,12 +10,23 @@ class Post
     private string $author_uuid;
     private string $title;
     private string $text;
-    public function __construct(string $author_uuid, string $title, string $text)
+
+    private function __construct(string $uuid, string $author_uuid, string $title, string $text)
     {
-        $this->uuid = Uuid::uuid4()->toString();;
+        $this->uuid = $uuid;
         $this->author_uuid = $author_uuid;
         $this->title = $title;
         $this->text = $text;
+    }
+
+    public static function create(string $author_uuid, string $title, string $text): self
+    {
+        return new self(Uuid::uuid4()->toString(), $author_uuid, $title, $text);
+    }
+
+    public static function fromStorage(string $uuid, string $author_uuid, string $title, string $text): self
+    {
+        return new self($uuid, $author_uuid, $title, $text);
     }
 
     public function getUuid(): string {

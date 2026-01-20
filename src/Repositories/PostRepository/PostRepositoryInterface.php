@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\PostRepository;
 
 use App\Post;
 
-interface PostsRepositoryInterface
+interface PostRepositoryInterface
 {
     public function get(string $uuid): Post;
 

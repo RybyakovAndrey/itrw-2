@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\CommentRepository;
 
 use App\Comment;
 
-interface CommentsRepositoryInterface
+interface CommentRepositoryInterface
 {
     public function get(string $uuid): Comment;
 
