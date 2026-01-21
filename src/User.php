@@ -19,6 +19,13 @@ class User
         $this->last_name = $last_name;
     }
 
+    public static function fromStorage(string $uuid, string $user_name, string $first_name, string $last_name): self
+    {
+        $obj = new self($user_name, $first_name, $last_name);
+        $obj->uuid = $uuid;
+        return $obj;
+    }
+
     public function getUuid(): string {
         return $this->uuid;
     }

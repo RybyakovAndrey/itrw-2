@@ -10,7 +10,7 @@ class Comment
     private string $post_uuid;
     private string $author_uuid;
     private string $text;
-    private function __construct(string $uuid, string $post_uuid, string $author_uuid, string $text){
+    public function __construct(string $uuid, string $post_uuid, string $author_uuid, string $text){
         $this->uuid = $uuid;
         $this->post_uuid = $post_uuid;
         $this->author_uuid = $author_uuid;

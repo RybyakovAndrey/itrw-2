@@ -11,7 +11,7 @@ class Post
     private string $title;
     private string $text;
 
-    private function __construct(string $uuid, string $author_uuid, string $title, string $text)
+    public function __construct(string $uuid, string $author_uuid, string $title, string $text)
     {
         $this->uuid = $uuid;
         $this->author_uuid = $author_uuid;
