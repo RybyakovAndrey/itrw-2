@@ -31,6 +31,17 @@ class CommentRepositoryImpl implements CommentRepositoryInterface
         ]);
     }
 
+    public function delete(string $uuid): void {
+        $statement = $this->pdo->prepare(
+            'DELETE FROM comments WHERE uuid = :uuid'
+        );
+        $statement->execute([':uuid' => $uuid]);
+
+        if ($statement->rowCount() === 0) {
+            throw new Exception("Комментарий с id $uuid не найден");
+        }
+    }
+
     public function get(string $uuid): Comment
     {
         $statement = $this->pdo->prepare(

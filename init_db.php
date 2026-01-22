@@ -5,24 +5,32 @@ $conn = new PDO('sqlite:' . __DIR__ . "/db.sqlite");
 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $sql = "
-    CREATE TABLE IF NOT EXISTS users (
+        DROP TABLE IF EXISTS comments;
+        DROP TABLE IF EXISTS posts;
+        
+        CREATE TABLE users (
         uuid TEXT PRIMARY KEY,
         user_name TEXT NOT NULL,
         first_name TEXT NOT NULL,
         last_name TEXT NOT NULL
     );
-    CREATE TABLE IF NOT EXISTS posts (
+    
+    CREATE TABLE posts (
         uuid TEXT PRIMARY KEY,
         author_uuid TEXT NOT NULL,
         title TEXT NOT NULL,
-        text TEXT NOT NULL
+        text TEXT NOT NULL,
+        FOREIGN KEY (author_uuid) REFERENCES users(uuid)
     );
-    CREATE TABLE IF NOT EXISTS comments (
+    
+    CREATE TABLE comments (
         uuid TEXT PRIMARY KEY,
         post_uuid TEXT NOT NULL,
         author_uuid TEXT NOT NULL,
-        text TEXT NOT NULL
-    )
+        text TEXT NOT NULL,
+        FOREIGN KEY (post_uuid) REFERENCES posts(uuid) ON DELETE CASCADE,
+        FOREIGN KEY (author_uuid) REFERENCES users(uuid)
+    );
 ";
 
 try {
