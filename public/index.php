@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/CreateComment.php';
 require_once __DIR__ . '/DeletePost.php';
+require_once __DIR__ . '/CreatePostLike.php';
 
 $pdo = new PDO('sqlite:' . __DIR__ . '/../db.sqlite');
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -36,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $path === '/posts/comment') {
     exit;
 }
 
-// Условие на удаление поста, после удаления удаляется комментарий из БД
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && $path === '/posts') {
     header('Content-Type: application/json');
 
@@ -52,6 +52,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && $path === '/posts') {
         echo json_encode(['status' => 'deleted']);
     } catch (\InvalidArgumentException $e) {
         http_response_code(400);
+        echo json_encode(['error' => $e->getMessage()]);
+    }
+
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $path === '/posts/like') {
+    header('Content-Type: application/json');
+
+    $input = json_decode(file_get_contents('php://input'), true);
+
+    $useCase = new CreatePostLike(
+        new \App\Repositories\PostLikeRepository\PostLikeRepositoryImpl($pdo),
+        new \App\Repositories\UserRepository\UserRepositoryImpl($pdo),
+        new \App\Repositories\PostRepository\PostRepositoryImpl($pdo)
+    );
+
+    try {
+        $useCase->handle($input);
+        http_response_code(201);
+        echo json_encode(['status' => 'liked']);
+    } catch (\InvalidArgumentException $e) {
+        http_response_code(400);
+        echo json_encode(['error' => $e->getMessage()]);
+    } catch (\Exception $e) {
+        http_response_code(500);
         echo json_encode(['error' => $e->getMessage()]);
     }
 
