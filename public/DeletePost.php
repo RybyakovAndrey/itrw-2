@@ -12,7 +12,6 @@ class DeletePost
 
     public function handle(string $uuid): void
     {
-        // Проверка формата UUID
         if (!preg_match('/^[0-9a-fA-F\-]{36}$/', $uuid)) {
             throw new InvalidArgumentException('Некорректный UUID');
         }
