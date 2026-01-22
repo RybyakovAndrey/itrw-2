@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/CreateComment.php';
+require_once __DIR__ . '/DeletePost.php';
 
 $pdo = new PDO('sqlite:' . __DIR__ . '/../db.sqlite');
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

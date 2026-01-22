@@ -16,6 +16,16 @@ class PostRepositoryImpl implements PostRepositoryInterface
         $this->pdo = $pdo;
     }
 
+    public function delete(string $uuid): void
+    {
+        $stmt = $this->pdo->prepare('DELETE FROM posts WHERE uuid = :uuid');
+        $stmt->execute([':uuid' => $uuid]);
+
+        if ($stmt->rowCount() === 0) {
+            throw new Exception("Пост с uuid $uuid не найден");
+        }
+    }
+
     public function save(Post $post): void
     {
         $stmt = $this->pdo->prepare(
