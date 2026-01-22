@@ -5,6 +5,10 @@ require_once __DIR__ . '/CreateComment.php';
 require_once __DIR__ . '/DeletePost.php';
 require_once __DIR__ . '/CreatePostLike.php';
 
+use App\Logger\Logger;
+
+$logger = new Logger();
+
 $pdo = new PDO('sqlite:' . __DIR__ . '/../db.sqlite');
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -17,9 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $path === '/posts/comment') {
     $input = json_decode(file_get_contents('php://input'), true);
 
     $useCase = new CreateComment(
-        new \App\Repositories\CommentRepository\CommentRepositoryImpl($pdo),
-        new \App\Repositories\UserRepository\UserRepositoryImpl($pdo),
-        new \App\Repositories\PostRepository\PostRepositoryImpl($pdo)
+        new \App\Repositories\CommentRepository\CommentRepositoryImpl($pdo, $logger),
+        new \App\Repositories\UserRepository\UserRepositoryImpl($pdo, $logger),
+        new \App\Repositories\PostRepository\PostRepositoryImpl($pdo, $logger)
     );
 
     try {
@@ -44,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE' && $path === '/posts') {
     $uuid = $query['uuid'] ?? '';
 
     $useCase = new DeletePost(
-        new \App\Repositories\PostRepository\PostRepositoryImpl($pdo)
+        new \App\Repositories\PostRepository\PostRepositoryImpl($pdo, $logger)
     );
 
     try {
@@ -64,9 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $path === '/posts/like') {
     $input = json_decode(file_get_contents('php://input'), true);
 
     $useCase = new CreatePostLike(
-        new \App\Repositories\PostLikeRepository\PostLikeRepositoryImpl($pdo),
-        new \App\Repositories\UserRepository\UserRepositoryImpl($pdo),
-        new \App\Repositories\PostRepository\PostRepositoryImpl($pdo)
+        new \App\Repositories\PostLikeRepository\PostLikeRepositoryImpl($pdo, $logger),
+        new \App\Repositories\UserRepository\UserRepositoryImpl($pdo, $logger),
+        new \App\Repositories\PostRepository\PostRepositoryImpl($pdo, $logger)
     );
 
     try {

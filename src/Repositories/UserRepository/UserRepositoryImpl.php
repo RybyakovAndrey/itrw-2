@@ -2,6 +2,7 @@
 
 namespace App\Repositories\UserRepository;
 
+use App\Logger\LoggerInterface;
 use App\User;
 use App\Repositories\UserRepository;
 use PDO;
@@ -10,10 +11,12 @@ use Exception;
 class UserRepositoryImpl implements UserRepositoryInterface
 {
     private PDO $pdo;
+    private LoggerInterface $logger;
 
-    public function __construct(PDO $pdo)
+    public function __construct(PDO $pdo, LoggerInterface $logger)
     {
         $this->pdo = $pdo;
+        $this->logger = $logger;
     }
 
     public function save(User $user): void
@@ -29,6 +32,8 @@ class UserRepositoryImpl implements UserRepositoryInterface
             ':first_name' => $user->getFirstName(),
             ':last_name' => $user->getLastName(),
         ]);
+
+        $this->logger->info("Пользователь сохранён: " . $user->getUuid());
     }
 
     public function get(string $uuid): User
@@ -41,6 +46,7 @@ class UserRepositoryImpl implements UserRepositoryInterface
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($data === false) {
+            $this->logger->warning("Пользователь не найден: " . $uuid);
             throw new Exception("Пользователь с uuid $uuid не найден");
         }
 

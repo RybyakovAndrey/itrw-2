@@ -2,16 +2,19 @@
 
 namespace App\Repositories\PostLikeRepository;
 
+use App\Logger\LoggerInterface;
 use App\PostLike;
 use PDO;
 
 class PostLikeRepositoryImpl implements PostLikeRepositoryInterface
 {
     private PDO $pdo;
+    private LoggerInterface $logger;
 
-    public function __construct(PDO $pdo)
+    public function __construct(PDO $pdo, LoggerInterface $logger)
     {
         $this->pdo = $pdo;
+        $this->logger = $logger;
     }
 
     public function save(PostLike $like): void
@@ -26,6 +29,8 @@ class PostLikeRepositoryImpl implements PostLikeRepositoryInterface
             ':post_uuid' => $like->getPostUuid(),
             ':user_uuid' => $like->getUserUuid()
         ]);
+
+        $this->logger->info("Лайк поста сохранён: " . $like->getUuid());
     }
 
     public function getByPostUuid(string $post_uuid): array
@@ -36,6 +41,10 @@ class PostLikeRepositoryImpl implements PostLikeRepositoryInterface
 
         $stmt->execute([':post_uuid' => $post_uuid]);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($rows)) {
+            $this->logger->warning("Нет лайка на посту: " . $post_uuid);
+        }
 
         $likes = [];
         foreach ($rows as $row) {

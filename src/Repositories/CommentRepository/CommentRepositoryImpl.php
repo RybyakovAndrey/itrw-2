@@ -3,6 +3,8 @@
 namespace App\Repositories\CommentRepository;
 
 use App\Comment;
+use App\Logger\Logger;
+use App\Logger\LoggerInterface;
 use App\Repositories\CommentRepository;
 use PDO;
 use Exception;
@@ -10,10 +12,12 @@ use Exception;
 class CommentRepositoryImpl implements CommentRepositoryInterface
 {
     private PDO $pdo;
+    private LoggerInterface $logger;
 
-    public function __construct(PDO $pdo)
+    public function __construct(PDO $pdo, LoggerInterface $logger)
     {
         $this->pdo = $pdo;
+        $this->logger = $logger;
     }
 
     public function save(Comment $comment): void
@@ -29,6 +33,8 @@ class CommentRepositoryImpl implements CommentRepositoryInterface
             ':author_uuid' => $comment->getAuthorUuid(),
             ':text' => $comment->getText(),
         ]);
+
+        $this->logger->info("Комментарий сохранён: " . $comment->getUuid());
     }
 
     public function delete(string $uuid): void {
@@ -38,6 +44,7 @@ class CommentRepositoryImpl implements CommentRepositoryInterface
         $statement->execute([':uuid' => $uuid]);
 
         if ($statement->rowCount() === 0) {
+            $this->logger->warning("Комментарий не найден: " . $uuid);
             throw new Exception("Комментарий с id $uuid не найден");
         }
     }
@@ -53,6 +60,7 @@ class CommentRepositoryImpl implements CommentRepositoryInterface
         $data = $statement->fetch(PDO::FETCH_ASSOC);
 
         if ($data === false) {
+            $this->logger->warning("Комментарий не найден: " . $uuid);
             throw new Exception("Нет комментария с uuid $uuid");
         }
 
